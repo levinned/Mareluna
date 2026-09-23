@@ -15,6 +15,8 @@
  * ------------------------------------------------------------------
  */
 
+import { asset } from '@/lib/base';
+
 export type ImageTag = 'cuisine' | 'restaurant' | 'terrasse' | 'moments';
 
 export type Photo = {
@@ -235,7 +237,7 @@ export const unusedPhotos = ['/assets/photos/nerano.jpg', '/assets/photos/tirami
 export const PHOTO_WIDTHS = [640, 1024, 1400] as const;
 
 const optBase = (p: Photo) =>
-  p.src.replace('/photos/', '/photos/opt/').replace(/\.jpg$/, '');
+  asset(p.src.replace('/photos/', '/photos/opt/').replace(/\.jpg$/, ''));
 
 /** Widths that actually exist for this photo (never upscaled). */
 const availableWidths = (p: Photo) => PHOTO_WIDTHS.filter((w) => w <= p.w);
@@ -248,13 +250,13 @@ export function webpSrcSet(p: Photo): string {
 
 /** JPEG fallback for browsers without WebP support. */
 export function fallbackSrc(p: Photo): string {
-  return availableWidths(p).includes(1024) ? `${optBase(p)}-1024.jpg` : p.src;
+  return availableWidths(p).includes(1024) ? `${optBase(p)}-1024.jpg` : asset(p.src);
 }
 
 /** Largest variant, used by the lightbox. */
 export function largeSrc(p: Photo): string {
   const widest = availableWidths(p).at(-1);
-  return widest ? `${optBase(p)}-${widest}.webp` : p.src;
+  return widest ? `${optBase(p)}-${widest}.webp` : asset(p.src);
 }
 
 const byId = new Map(photos.map((p) => [p.id, p]));

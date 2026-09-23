@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useI18n } from '@/i18n';
 import { LANGS, LANG_TAG, pathFor, type Lang, type PageKey } from '@/i18n/routes';
 import { addressOneLine, business } from '@/content/business';
+import { asset, siteUrl } from '@/lib/base';
 
 function upsertMeta(attr: 'name' | 'property', key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`);
@@ -37,11 +38,11 @@ function restaurantJsonLd(lang: Lang) {
     '@context': 'https://schema.org',
     '@type': 'Restaurant',
     name: business.legalName,
-    url: window.location.origin + pathFor('home', lang),
+    url: siteUrl(pathFor('home', lang)),
     telephone: business.phoneDisplay,
     email: business.email,
     servesCuisine: ['Italian', 'Neapolitan', 'Pizza'],
-    hasMenu: window.location.origin + business.menuPdf,
+    hasMenu: window.location.origin + asset(business.menuPdf),
     acceptsReservations: business.reservationUrl,
     sameAs: [business.instagramUrl, business.mapsUrl],
     address: {
@@ -76,10 +77,9 @@ export function Seo({ page }: { page: PageKey }) {
     upsertMeta('property', 'og:locale', LANG_TAG[lang].replace('-', '_'));
     upsertMeta('name', 'twitter:card', 'summary_large_image');
 
-    const origin = window.location.origin;
-    upsertLink('canonical', origin + pathFor(page, lang));
-    for (const l of LANGS) upsertLink('alternate', origin + pathFor(page, l), l);
-    upsertLink('alternate', origin + pathFor(page, 'fr'), 'x-default');
+    upsertLink('canonical', siteUrl(pathFor(page, lang)));
+    for (const l of LANGS) upsertLink('alternate', siteUrl(pathFor(page, l)), l);
+    upsertLink('alternate', siteUrl(pathFor(page, 'fr')), 'x-default');
   }, [lang, page, t]);
 
   // Restaurant structured data, mounted once for the whole site.

@@ -32,9 +32,36 @@ npm run typecheck  # nur Typprüfung
 
 ## Deployment
 
-Der Build ist eine statische SPA. `public/_redirects` enthält bereits die
-SPA-Regel für Netlify (`/* /index.html 200`). Für andere Hoster muss ein
-gleichwertiger Fallback auf `index.html` eingerichtet werden, sonst liefern
+Der Build ist eine statische SPA. Sie läuft sowohl im Wurzelverzeichnis einer
+Domain als auch in einem Unterordner — gesteuert über die Umgebungsvariable
+`VITE_BASE` zur Buildzeit (siehe `src/lib/base.ts`).
+
+### Netlify (empfohlen)
+
+`netlify.toml` enthält Build-Befehl, Ausgabeverzeichnis und Node-Version;
+`public/_redirects` liefert die SPA-Regel (`/* /index.html 200`). Repository
+verbinden, fertig. Direktaufrufe von `/menu` antworten korrekt mit 200.
+
+### GitHub Pages
+
+`.github/workflows/deploy.yml` baut bei jedem Push auf `main` und
+veröffentlicht nach `https://<user>.github.io/<repo>/`. Der Workflow setzt
+`VITE_BASE` auf den Repository-Namen und legt `404.html` als Kopie von
+`index.html` ab, damit Direktaufrufe vom Router übernommen werden.
+
+Einmalig einzurichten: **Settings → Pages → Source: GitHub Actions**.
+
+Zwei Einschränkungen gegenüber Netlify:
+
+* Pages funktioniert bei **privaten** Repositories nur mit einem
+  kostenpflichtigen Konto.
+* Pages kennt keine Rewrites. Ein Direktaufruf von `/menu` wird zwar korrekt
+  angezeigt, antwortet aber mit HTTP **404** statt 200 — für Suchmaschinen
+  ein Nachteil.
+
+### Andere Hoster
+
+Ein Fallback auf `index.html` muss eingerichtet sein, sonst liefern
 Direktaufrufe von `/menu` oder `/en/story` einen 404 des Servers.
 
 ---

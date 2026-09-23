@@ -12,6 +12,7 @@ import {
 import { useI18n } from '@/i18n';
 import { useScrollSpy } from '@/lib/hooks';
 import { cn, scrollToY } from '@/lib/utils';
+import { asset } from '@/lib/base';
 import { ArrowUpRight, InfoIcon, Reveal } from '@/components/ui/Primitives';
 import { MoonAccent } from '@/components/ui/Media';
 import { PageHero, ReserveCta } from '@/components/sections/Shared';
@@ -371,7 +372,7 @@ export default function MenuPage() {
       <PageHero eyebrow={t.menu.eyebrow} title={t.menu.title} lede={t.menu.lede}>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <a
-            href={business.menuPdf}
+            href={asset(business.menuPdf)}
             target="_blank"
             rel="noopener noreferrer"
             className="group inline-flex items-center justify-center gap-2 rounded-full bg-navy px-7 py-3.5 font-medium text-porcelain transition-colors duration-300 hover:bg-night"
@@ -381,7 +382,7 @@ export default function MenuPage() {
             <ArrowUpRight />
           </a>
           <a
-            href={business.menuPdf}
+            href={asset(business.menuPdf)}
             download={business.menuPdfFilename}
             className="inline-flex items-center justify-center gap-2.5 rounded-full border border-navy/20 px-7 py-3.5 font-medium text-navy transition-colors duration-300 hover:border-navy/50"
           >
