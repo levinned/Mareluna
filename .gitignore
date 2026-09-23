@@ -2,3 +2,6 @@ node_modules
 dist
 .DS_Store
 *.local
+
+# local editor / Claude Code config
+.claude
