@@ -1,0 +1,17 @@
+# Netlify build settings.
+#
+# Routing is handled by `public/_redirects` (every path is served by
+# index.html, so /menu and /en/story work on a direct visit).
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Vite 8 requires Node ^20.19 or >= 22.12.
+  NODE_VERSION = "22"
+
+# No custom cache headers here on purpose: Vite's fingerprinted bundles and
+# the unversioned files from `public/` (the menu PDF, the photographs) end up
+# side by side in `dist/assets/`, so a blanket `immutable` rule would freeze
+# a replaced menu PDF for visitors. Netlify's defaults handle both correctly.
