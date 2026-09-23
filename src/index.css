@@ -1,0 +1,252 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ *
+ * Mareluna — design tokens
+ * "Mare & Luna": sea, moon and modern Neapolitan hospitality.
+ * ------------------------------------------------------------------ */
+@theme {
+  /* Palette (fixed brand values — do not drift) */
+  --color-navy: #102a3b;
+  --color-night: #071b2a;
+  --color-mist: #b9cdd2;
+  --color-coast: #dce8e8;
+  --color-porcelain: #f6f3ec;
+  --color-sand: #ded1be;
+  --color-rose: #b86a61;
+  /* Same hue, deepened so small text and button labels clear WCAG AA
+     (4.7:1 on porcelain). Used for every interactive rose surface;
+     --color-rose stays for large display type and graphic accents. */
+  --color-rose-deep: #a85449;
+  --color-brass: #b99762;
+  --color-ink: #172127;
+
+  /* Derived, used for text on dark grounds */
+  --color-seafoam: #cfdfe2;
+
+  --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Fluid display sizes */
+  --text-d1: clamp(2.75rem, 1.35rem + 6.2vw, 7rem);
+  --text-d1--line-height: 0.95;
+  --text-d2: clamp(2.25rem, 1.2rem + 4.4vw, 4.75rem);
+  --text-d2--line-height: 1;
+  --text-d3: clamp(1.75rem, 1.15rem + 2.4vw, 3rem);
+  --text-d3--line-height: 1.08;
+  --text-lede: clamp(1.0625rem, 0.98rem + 0.42vw, 1.3125rem);
+  --text-lede--line-height: 1.62;
+
+  --ease-tide: cubic-bezier(0.22, 0.8, 0.3, 1);
+
+  --shadow-lift: 0 28px 60px -32px rgb(16 42 59 / 0.45);
+  --shadow-plate: 0 40px 90px -45px rgb(7 27 42 / 0.6);
+}
+
+/* ------------------------------------------------------------------ *
+ * Base
+ * ------------------------------------------------------------------ */
+@layer base {
+  :root {
+    color-scheme: light;
+    --header-h: 4.5rem;
+    /* Fragment jumps land directly under the header. Pages with their
+       own sticky bar (the menu) add its height via scroll-margin-top. */
+    scroll-padding-top: var(--header-h);
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --header-h: 5.5rem;
+    }
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-porcelain);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Instrument Serif is optically small; nudge its optical weight. */
+  .font-display {
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-rose) 30%, transparent);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-rose);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .on-dark :focus-visible {
+    outline-color: var(--color-sand);
+  }
+
+  img {
+    color: transparent; /* hides broken-alt flash */
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Utilities
+ * ------------------------------------------------------------------ */
+@utility shell {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 82.5rem;
+  padding-inline: 1.25rem;
+
+  @media (min-width: 640px) {
+    padding-inline: 2rem;
+  }
+  @media (min-width: 1280px) {
+    padding-inline: 3.5rem;
+  }
+}
+
+@utility shell-narrow {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 48rem;
+  padding-inline: 1.25rem;
+
+  @media (min-width: 640px) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Small caps label used for eyebrows, menu metadata, prices */
+@utility label-xs {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* The recurring moon / tide shape: a soft arch used to mask images */
+@utility mask-arch {
+  border-radius: 9999px 9999px 1.5rem 1.5rem;
+}
+
+@utility mask-arch-lg {
+  border-radius: 22rem 22rem 2rem 2rem;
+}
+
+/* Brand wordmark rendered from the official logo file via alpha mask,
+   so it can take any brand colour and stays crisp at any size. */
+@utility wordmark {
+  display: block;
+  background-color: currentColor;
+  -webkit-mask-image: var(--wordmark-src);
+  mask-image: var(--wordmark-src);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+  aspect-ratio: 881 / 223;
+}
+
+/* ------------------------------------------------------------------ *
+ * Motion — a slow tide, never playful
+ * ------------------------------------------------------------------ */
+@keyframes tide-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(0, -2.5%, 0) scale(1.035); }
+}
+
+@keyframes fade-rise {
+  from { opacity: 0; transform: translate3d(0, 18px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes soft-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.drift {
+  animation: tide-drift 26s var(--ease-tide) infinite;
+  will-change: transform;
+}
+
+.drift-slow {
+  animation: tide-drift 38s var(--ease-tide) infinite;
+  will-change: transform;
+}
+
+/* Scroll reveal — see lib/useReveal.ts */
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition:
+    opacity 0.9s var(--ease-tide),
+    transform 0.9s var(--ease-tide);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal='in'] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .drift,
+  .drift-slow {
+    animation: none !important;
+  }
+}
+
+/* Hide scrollbar on the sticky menu category rail while keeping it scrollable */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
