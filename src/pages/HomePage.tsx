@@ -103,21 +103,6 @@ function Hero() {
           </Reveal>
         </div>
 
-        {/* Editorial meta strip --------------------------------- */}
-        <Reveal delay={220}>
-          <ul className="label-xs mt-16 flex flex-col divide-y divide-navy/10 border-t border-navy/10 text-navy/70 sm:flex-row sm:divide-x sm:divide-y-0">
-            <li className="py-4 sm:pr-8">{business.address.street} · {business.address.city}</li>
-            <li className="py-4 sm:px-8">Pizza napoletana · Cucina italiana</li>
-            <li className="py-4 sm:pl-8">
-              <a
-                href={business.phoneHref}
-                className="inline-block py-1.5 transition-colors hover:text-rose-deep"
-              >
-                {business.phoneDisplay}
-              </a>
-            </li>
-          </ul>
-        </Reveal>
       </div>
     </section>
   );
